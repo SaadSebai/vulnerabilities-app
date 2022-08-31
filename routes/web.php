@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\VulnerabilityController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,12 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::redirect('/','login')->name('home');
+
+Route::middleware(['auth'])->group(function() {
+
+    // Dashboard
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    // Vulnerabilities
+    Route::resource('vulnerabilities', VulnerabilityController::class)->except('show');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
